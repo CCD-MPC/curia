@@ -71,7 +71,7 @@ class SwiftData:
         self.swift_connection.put_container(container_name)
         print("Container {0} created.".format(container_name))
 
-    def get_data(self, container_name, key, file_path):
+    def get_data(self, container_name, key, file_path, out_file):
         """
         Retrieve data from an existing container.
         """
@@ -86,7 +86,7 @@ class SwiftData:
 
         os.makedirs(os.path.dirname(full_path), exist_ok=True)
 
-        with open("{0}/{1}".format(file_path, key), 'wb') as out_file:
+        with open("{0}/{1}".format(file_path, out_file), 'wb') as out_file:
             out_file.write(contents)
 
         print("Wrote object {0} to {1}.".format(key, file_path))
