@@ -37,7 +37,7 @@ class DataverseData:
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
         # TODO: implement multiple file retrieval functionality
-        expected_file = self.cfg["source"]["files"]
+        expected_file = self.cfg["source"]["file"]
         file_found = False
 
         aliased_dv = self.dataverse_connection.get_dataverse(self.cfg["source"]['alias'])
