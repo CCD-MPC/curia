@@ -1,1 +1,3 @@
 .idea/
+__pycache__
+conclave_data.egg-info/
