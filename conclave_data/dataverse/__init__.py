@@ -36,8 +36,8 @@ class DataverseData:
 
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
-        aliased_dv = self.dataverse_connection.get_dataverse(self.cfg["source"]['alias'])
-        dataset = aliased_dv.get_dataset_by_doi(self.cfg['source']['doi'])
+        aliased_dv = self.dataverse_connection.get_dataverse(self.cfg["data"]['alias'])
+        dataset = aliased_dv.get_dataset_by_doi(self.cfg["data"]['doi'])
         files = dataset.get_files()
 
         for f in files:
@@ -48,7 +48,7 @@ class DataverseData:
                 with open("{0}/{1}".format(file_path, out_file), 'wb') as out:
                     out.write(req.content)
 
-                print("Wrote object {0} to {1}.".format(f.name, file_path))
+                print("Wrote object {0} to {1}.".format(out_file, file_path))
                 return
 
         print("Could not locate file: {}. "
@@ -70,10 +70,10 @@ class DataverseData:
         # TODO: make DV output dataset endpoint configurable
         """
 
-        aliased_dv = self.dataverse_connection.get_dataverse(self.cfg['dest']['alias'])
+        aliased_dv = self.dataverse_connection.get_dataverse(self.cfg['alias'])
         dataset = aliased_dv.create_dataset(
             file,
             'Output data for {}.'.format(file),
-            self.cfg['dest']['author']
+            self.cfg['author']
         )
         dataset.upload_file(file, content)
