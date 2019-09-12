@@ -1,2 +1,2 @@
-# conclave_data
-Utilities for handling data from remote object stores
+# curia
+utilities for handling data from remote object stores
