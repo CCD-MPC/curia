@@ -25,6 +25,23 @@ class DataverseData:
         self.cfg = cfg
         self.dataverse_connection = DataverseHandler().get_connection(cfg)
 
+    @staticmethod
+    def format_data(dataset):
+        """
+        Convert tsv data to csv.
+        """
+
+        decoded_data = dataset.decode('utf-8')
+        rows = decoded_data.split("\n")
+
+        return "\n".join([",".join(r.split("\t")) for r in rows])
+
+    @staticmethod
+    def is_tsv(fname):
+
+        ext = fname.split(".")[-1]
+        return ext == "tab"
+
     def get_data(self, key, file_path, out_file):
         """
         Retrieve a file from Dataverse.
@@ -43,17 +60,21 @@ class DataverseData:
         for f in files:
             if f.name == key:
                 download_url = f.download_url
-                req = requests.get(download_url, auth=self.dataverse_connection.auth)
+                req = requests.get(download_url, params={"key": self.dataverse_connection.token})
 
-                with open("{0}/{1}".format(file_path, out_file), 'wb') as out:
-                    out.write(req.content)
+                if self.is_tsv(f.name):
+                    formatted_data = self.format_data(req.content)
+                else:
+                    formatted_data = req.content.decode('utf-8')
+
+                with open("{0}/{1}".format(file_path, out_file), 'w') as out:
+                    out.write(formatted_data)
 
                 print("Wrote object {0} to {1}.".format(out_file, file_path))
                 return
 
-        print("Could not locate file: {}. "
-            "Check to make sure this file is stored on this Dataverse.\n"
-            .format(expected_file))
+        print("Could not locate file: {}. Check to make sure this file is stored on this Dataverse.\n"
+              .format(key))
 
     def put_data(self, file_path, file):
         """
