@@ -64,6 +64,8 @@ class DataverseData:
 
                 if self.is_tsv(f.name):
                     formatted_data = self.format_data(req.content)
+                    tmp = out_file.split(".")[:-1]
+                    out_file = ".".join(tmp + ["csv"])
                 else:
                     formatted_data = req.content.decode('utf-8')
 
