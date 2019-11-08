@@ -79,10 +79,10 @@ class Dec:
     Decrypt data and write plaintext to file
     """
 
-    def __init__(self, input_file, dec_json_path):
+    def __init__(self, input_file, dec_conf):
 
         self.input_file = input_file
-        self.dec_path = dec_json_path
+        self.dec_conf = dec_conf
         self.k = None
         self.nonce = None
 
@@ -93,11 +93,18 @@ class Dec:
         Read AES key and nonce from file
         """
 
-        with open(self.dec_path, 'r') as in_json:
-            data = json.load(in_json)
+        if isinstance(self.dec_conf, str):
 
-            self.k = base64.decodebytes(data["k"].encode())
-            self.nonce = base64.decodebytes(data["k"].encode())
+            with open(self.dec_conf, 'r') as in_json:
+                data = json.load(in_json)
+
+                self.k = base64.decodebytes(data["k"].encode())
+                self.nonce = base64.decodebytes(data["k"].encode())
+
+        elif isinstance(self.dec_conf, dict):
+
+            self.k = self.dec_conf["k"]
+            self.nonce = self.dec_conf["nonce"]
 
         return self
 
